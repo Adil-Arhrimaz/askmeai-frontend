@@ -1,0 +1,30 @@
+@if(status()){
+  @if(status() === 'loading'){
+    Loading...
+  }
+  @if(status() === 'error'){
+    <p class="error">Error: {{ error()}}</p>
+  }
+}
+
+<form (ngSubmit)="onLogin()">
+  <input
+    [(ngModel)]="username"
+    name="username"
+    type="text"
+    placeholder="Email"
+    required
+  />
+  <input
+    [(ngModel)]="password"
+    name="password"
+    type="password"
+    placeholder="Password"
+    required
+  />
+  <button type="submit">Login</button>
+</form>
+@if(status() === 'success'){
+  <p>Welcome, {{ userEmail()}}</p>
+  <button (click)="logout()">Logout</button>
+}
