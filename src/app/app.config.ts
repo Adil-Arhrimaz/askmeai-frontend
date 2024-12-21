@@ -6,6 +6,7 @@ import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
 import * as fromUser from './store/user';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export const appConfig: ApplicationConfig = {
   
@@ -19,6 +20,6 @@ export const appConfig: ApplicationConfig = {
     provideEffects([
       fromUser.UserEffects,
     ]),
-    provideStoreDevtools({ maxAge: 25, logOnly: false }),
+    provideStoreDevtools({ maxAge: 25, logOnly: false }), provideAnimationsAsync(),
   ]
 };

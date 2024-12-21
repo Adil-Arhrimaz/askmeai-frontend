@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { CognitoUserService } from '../../services/cognito-user/cognito-user.service';
 import { AuthenticationDetails, CognitoUserSession } from 'amazon-cognito-identity-js';
+import { User } from './user.models';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ export class UserService {
 
   private cognitoUser= inject(CognitoUserService);
   
-  login(email: string, password: string): Promise<any> {
+  login(email: string, password: string): Promise<User> {
     const cognitoUser = this.cognitoUser.initialize(email);
     const authDetails = new AuthenticationDetails({
       Username: email,

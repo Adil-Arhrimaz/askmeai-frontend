@@ -1,30 +1,85 @@
-@if(status()){
-  @if(status() === 'loading'){
-    Loading...
-  }
-  @if(status() === 'error'){
-    <p class="error">Error: {{ error()}}</p>
-  }
-}
+<div class="login-container">
+  <mat-card class="login-card">
+    @if(status() === 'error') {
+      <div class="error">
+        <mat-error>{{ error() }}</mat-error>
+      </div>
+    }
 
-<form (ngSubmit)="onLogin()">
-  <input
-    [(ngModel)]="username"
-    name="username"
-    type="text"
-    placeholder="Email"
-    required
-  />
-  <input
-    [(ngModel)]="password"
-    name="password"
-    type="password"
-    placeholder="Password"
-    required
-  />
-  <button type="submit">Login</button>
-</form>
-@if(status() === 'success'){
-  <p>Welcome, {{ userEmail()}}</p>
-  <button (click)="logout()">Logout</button>
-}
+    <form #loginForm="ngForm" (ngSubmit)="onLogin()" class="login-form">
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Email</mat-label>
+        <input
+          matInput
+          [(ngModel)]="username"
+          name="username"
+          type="email"
+          placeholder="Email"
+          required
+          email
+          #usernameCtrl="ngModel"
+        />
+        @if(usernameCtrl?.touched && usernameCtrl?.errors?.['required']){
+          <mat-error>
+            Email is required
+          </mat-error>
+        }
+        @else if(usernameCtrl?.touched && usernameCtrl?.dirty && usernameCtrl?.errors?.['email']){
+          <mat-error>
+            Please enter a valid email
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="full-width">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          [(ngModel)]="password"
+          name="password"
+          type="password"
+          placeholder="Password"
+          required
+          minlength="6"
+          pattern="^(?=.*\d)[a-zA-Z\d]{6,}$"
+          #passwordCtrl="ngModel"
+        />
+        @if(passwordCtrl?.touched && passwordCtrl?.errors?.['required']){
+          <mat-error>
+            Password is required
+          </mat-error>
+        }
+        @else if(passwordCtrl?.touched && passwordCtrl?.dirty && passwordCtrl?.errors?.['minlength']){
+          <mat-error>
+            Password must be at least 6 characters long
+          </mat-error>
+        }
+        @else if(passwordCtrl?.touched && passwordCtrl?.dirty && passwordCtrl?.errors?.['pattern']){
+          <mat-error>
+            Password must contain at least one numeric character
+          </mat-error>
+        }
+      </mat-form-field>
+
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="loginForm.invalid || status() === 'loading'"
+        class="full-width"
+      >
+      @if(status() === 'loading') {
+        <mat-spinner diameter="20"></mat-spinner>
+      }@else {
+        Login
+      }
+        
+      </button>
+    </form>
+
+    @if(status() === 'success') {
+      <p>Welcome, {{ userEmail() }}</p>
+      <button mat-raised-button color="warn" (click)="logout()">Logout</button>
+    }
+  </mat-card>
+</div>
